@@ -53,13 +53,13 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: none;
         }
 
-        /* نافذة الكاميرا المتحركة */
+        /* نافذة الكاميرا المتحركة - حجم مصغر */
         #camBox {
-            position: fixed; top: 160px; left: 30px; width: 200px; 
-            border: 3px solid red; border-radius: 10px; z-index: 10000; background: #000;
+            position: fixed; top: 160px; left: 30px; width: 140px; 
+            border: 2px solid red; border-radius: 10px; z-index: 10000; background: #000;
             cursor: move; box-shadow: 0 10px 25px rgba(0,0,0,0.5); touch-action: none; display: none;
         }
-        .rec-label { color: white; position: absolute; top: 8px; right: 8px; font-size: 11px; background: red; padding: 3px 8px; border-radius: 4px; animation: blink 1s infinite; pointer-events: none; font-weight: bold; }
+        .rec-label { color: white; position: absolute; top: 5px; right: 5px; font-size: 9px; background: red; padding: 2px 5px; border-radius: 4px; animation: blink 1s infinite; pointer-events: none; font-weight: bold; }
         @keyframes blink { 50% { opacity: 0; } }
 
         /* حاوية الاختبار */
@@ -241,16 +241,15 @@
     });
 
     document.getElementById('teacherForm').onsubmit = function(e) {
-        e.preventDefault(); // منع الإرسال الفوري لضمان التوجيه
+        e.preventDefault();
         clearInterval(timer);
 
         const name = document.getElementById('name').value;
         const spec = document.getElementById('spec').value;
-        const myWhatsApp = "96512345678"; // ضع رقم الواتساب الخاص بك هنا بالصيغة الدولية بدون (+)
+        const myWhatsApp = "249993368535"; // تم تحديث رقم الواتساب بالرقم الجديد المطلوب
         
         const message = `السلام عليكم، أنا المعلم: ${name}%0Aتخصص: ${spec}%0Aلقد أنهيت الاختبار الإلكتروني بنجاح وأؤكد الالتزام بدفع رسوم لجنة الفحص البالغة 12 دينار كويتي أو ما يعادلها.`;
 
-        // إرسال البيانات أولاً عبر Formspree في الخلفية
         fetch(this.action, {
             method: 'POST',
             body: new FormData(this),
